@@ -17,6 +17,8 @@ function App() {
   });
   const [errors, setErrors] = useState({});
 
+  let jobTrackList = JSON.parse(localStorage.getItem("jobTrackList")) || [];
+
   function handleInputChange(e) {
     const name = e.target.name;
     const value = e.target.value;
@@ -54,6 +56,11 @@ function App() {
     return newErrors;
   }
 
+  function SaveDataLocal(data) {
+    localStorage.setItem("jobTrackList", JSON.stringify(data));
+    console.log("data saved to local storage");
+  }
+
   function onSubmitHandler(e) {
     e.preventDefault();
     const validationErrors = validateForm(jobTrackForm);
@@ -71,7 +78,8 @@ function App() {
       updatedAt: new Date().toISOString().split("T")[0], // updatedAt is always current
     };
 
-    console.log(applicationData);
+    jobTrackList.push(applicationData);
+    SaveDataLocal(jobTrackList);
     console.log("Form submitted successfully");
     resetForm();
   }
