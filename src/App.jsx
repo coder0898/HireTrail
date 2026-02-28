@@ -16,8 +16,10 @@ function App() {
   });
   const [errors, setErrors] = useState({});
   const [activeTab, setActiveTab] = useState("list");
-
-  let jobTrackList = JSON.parse(localStorage.getItem("jobTrackList")) || [];
+  const [jobs, setJobs] = useState(
+    JSON.parse(localStorage.getItem("jobTrackList")) || [],
+  );
+  const [editingId, setEditingId] = useState(null);
 
   function handleInputChange(e) {
     const name = e.target.name;
@@ -71,21 +73,37 @@ function App() {
       return;
     }
 
-    let applicationData = {
-      ...jobTrackForm,
-      id: Date.now(),
-      createdAt: new Date().toISOString().split("T")[0],
-      updatedAt: new Date().toISOString().split("T")[0], // updatedAt is always current
-    };
+    if (editingId) {
+      const updateJobs = jobs.map((job) =>
+        job.id === editingId
+          ? {
+              ...job,
+              ...jobTrackForm,
+              updatedAt: new Date().toISOString().split("T")[0],
+            }
+          : job,
+      );
+      setJobs(updateJobs);
+      SaveDataLocal(updateJobs);
+      setEditingId(null);
+    } else {
+      let applicationData = {
+        ...jobTrackForm,
+        id: Date.now(),
+        createdAt: new Date().toISOString().split("T")[0],
+        updatedAt: new Date().toISOString().split("T")[0], // updatedAt is always current
+      };
+      const updateJobs = [...jobs, applicationData];
+      setJobs(updateJobs);
+      SaveDataLocal(updateJobs);
+    }
 
-    jobTrackList.push(applicationData);
-    SaveDataLocal(jobTrackList);
     console.log("Form submitted successfully");
     resetForm();
   }
 
   function resetForm() {
-    setJobTrackForm({
+    const initialState = {
       companyName: "",
       jobRole: "",
       jobLocation: "",
@@ -93,10 +111,33 @@ function App() {
       jobStatus: "Applied",
       jobPriority: "Medium",
       appliedDate: new Date().toISOString().split("T")[0],
-    });
+    };
+
+    setJobTrackForm(initialState);
     setErrors({});
-    console.log("form get reset");
+    setEditingId(null);
+    setActiveTab("list");
   }
+
+  const handleEdit = (data) => {
+    setJobTrackForm({
+      companyName: data.companyName,
+      jobRole: data.jobRole,
+      jobLocation: data.jobLocation,
+      jobType: data.jobType,
+      jobStatus: data.jobStatus,
+      jobPriority: data.jobPriority,
+      appliedDate: data.appliedDate,
+    });
+    setEditingId(data.id);
+    setActiveTab("form");
+  };
+
+  const handleDelete = (id) => {
+    const updateJobs = jobs.filter((job) => job.id !== id);
+    setJobs(updateJobs);
+    SaveDataLocal(updateJobs);
+  };
 
   return (
     <>
@@ -114,6 +155,10 @@ function App() {
             errors={errors}
             handleInputChange={handleInputChange}
             resetForm={resetForm}
+            jobs={jobs}
+            handleEdit={handleEdit}
+            editingId={editingId}
+            handleDelete={handleDelete}
           />
         </main>
       </div>

@@ -9,6 +9,7 @@ const JobFormContainer = ({
   errors,
   onSubmitHandler,
   resetForm,
+  editingId,
 }) => {
   return (
     <>
@@ -91,7 +92,7 @@ const JobFormContainer = ({
         </div>
 
         <div className="md:col-span-2 flex justify-end gap-4 pt-4">
-          <Button
+          {/* <Button
             type="button"
             onClickFunction={onSubmitHandler}
             Content="Add Job"
@@ -102,6 +103,27 @@ const JobFormContainer = ({
             onClickFunction={resetForm}
             Content="Reset Form"
             className="bg-yellow-500 text-white px-5 py-2.5 rounded-lg font-medium hover:bg-yellow-700 transition"
+          /> */}
+          <Button
+            type="button"
+            onClickFunction={onSubmitHandler}
+            Content={editingId ? "Save Changes" : "Add Job"}
+            className={`text-white px-5 py-2.5 rounded-lg font-medium transition ${
+              editingId
+                ? "bg-yellow-500 hover:bg-yellow-600"
+                : "bg-blue-600 hover:bg-blue-700"
+            }`}
+          />
+
+          <Button
+            type="button"
+            onClickFunction={resetForm}
+            Content={editingId ? "Cancel Edit" : "Reset Form"}
+            className={`text-white px-5 py-2.5 rounded-lg font-medium transition ${
+              editingId
+                ? "bg-red-500 hover:bg-red-600"
+                : "bg-yellow-500 hover:bg-yellow-600"
+            }`}
           />
         </div>
       </form>
