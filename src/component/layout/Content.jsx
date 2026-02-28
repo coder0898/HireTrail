@@ -1,6 +1,9 @@
 import { BriefcaseIcon } from "@heroicons/react/16/solid";
 import { ClipboardDocumentListIcon } from "@heroicons/react/20/solid";
 import JobFormContainer from "../jobForm/JobFormContainer";
+import { useEffect } from "react";
+
+import TableContainer from "../table/TableContainer";
 const Content = ({
   activeTab,
   jobTrackForm,
@@ -8,11 +11,20 @@ const Content = ({
   resetForm,
   errors,
   onSubmitHandler,
+  jobs,
+  handleEdit,
+  editingId,
+  handleDelete,
 }) => {
+  // Fetch jobs from localStorage
+  useEffect(() => {
+    JSON.parse(localStorage.getItem("jobTrackList"));
+  }, [jobs]);
+
   return (
     <>
       <section className="flex-1 overflow-y-auto p-4 md:p-6">
-        <div className="w-full max-w-4xl mx-auto bg-white shadow-md rounded-xl p-6 md:p-8">
+        <div className="w-full bg-white shadow-md rounded-xl p-6 md:p-8">
           {activeTab === "form" && (
             <>
               <div className="flex items-center gap-3 mb-6">
@@ -28,6 +40,7 @@ const Content = ({
                 errors={errors}
                 onSubmitHandler={onSubmitHandler}
                 resetForm={resetForm}
+                editingId={editingId}
               />
             </>
           )}
@@ -41,9 +54,14 @@ const Content = ({
               </div>
 
               {/* Temporary placeholder */}
-              <p className="text-gray-600">
-                Your saved job applications will appear here.
-              </p>
+
+              <div className="hidden w-full overflow-x-auto md:block">
+                <TableContainer
+                  jobs={jobs}
+                  handleEdit={handleEdit}
+                  handleDelete={handleDelete}
+                />
+              </div>
             </>
           )}
         </div>
