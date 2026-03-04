@@ -54,14 +54,25 @@ const Content = ({
               </div>
 
               {/* Temporary placeholder */}
-
-              <div className="hidden w-full overflow-x-auto md:block">
-                <TableContainer
-                  jobs={jobs}
-                  handleEdit={handleEdit}
-                  handleDelete={handleDelete}
-                />
-              </div>
+              {jobs.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-16 text-center">
+                  <div className="text-5xl mb-4">📭</div>
+                  <h2 className="text-xl font-semibold text-gray-700">
+                    No job applications yet
+                  </h2>
+                  <p className="text-gray-500 mt-2">
+                    Click "Add Job" to start tracking.
+                  </p>
+                </div>
+              ) : (
+                <div className="hidden w-full overflow-x-auto md:block">
+                  <TableContainer
+                    jobs={jobs}
+                    handleEdit={handleEdit}
+                    handleDelete={handleDelete}
+                  />
+                </div>
+              )}
             </>
           )}
         </div>
