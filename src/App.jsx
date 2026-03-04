@@ -3,6 +3,7 @@ import "./App.css";
 import Header from "./component/layout/Header";
 import Sidebar from "./component/layout/SideBar";
 import Content from "./component/layout/Content";
+import toast, { Toaster } from "react-hot-toast";
 
 function App() {
   const [jobTrackForm, setJobTrackForm] = useState({
@@ -36,42 +37,12 @@ function App() {
     }));
   }
 
-  function validateForm(values) {
-    const newErrors = {};
-
-    if (!values.companyName.trim()) {
-      newErrors.companyName = "Company name is required";
-    }
-
-    if (!values.jobRole.trim()) {
-      newErrors.jobRole = "Job role is required";
-    }
-
-    if (!values.jobLocation.trim()) {
-      newErrors.jobLocation = "Location is required";
-    }
-
-    if (!values.jobType.trim()) {
-      newErrors.jobType = "Job type is required";
-    }
-
-    return newErrors;
-  }
-
   function SaveDataLocal(data) {
     localStorage.setItem("jobTrackList", JSON.stringify(data));
-    console.log("data saved to local storage");
   }
 
   function onSubmitHandler(e) {
     e.preventDefault();
-    const validationErrors = validateForm(jobTrackForm);
-    setErrors(validationErrors);
-
-    if (Object.keys(validationErrors).length > 0) {
-      console.log("please fill empty fields...");
-      return;
-    }
 
     if (editingId) {
       const updateJobs = jobs.map((job) =>
@@ -86,6 +57,7 @@ function App() {
       setJobs(updateJobs);
       SaveDataLocal(updateJobs);
       setEditingId(null);
+      toast.success("Job Edited successfully! 🎉");
     } else {
       let applicationData = {
         ...jobTrackForm,
@@ -96,9 +68,9 @@ function App() {
       const updateJobs = [...jobs, applicationData];
       setJobs(updateJobs);
       SaveDataLocal(updateJobs);
+      toast.success("Job added successfully! 🎉");
     }
 
-    console.log("Form submitted successfully");
     resetForm();
   }
 
@@ -137,12 +109,14 @@ function App() {
     const updateJobs = jobs.filter((job) => job.id !== id);
     setJobs(updateJobs);
     SaveDataLocal(updateJobs);
+    toast.error("Job deleted! 😢");
   };
 
   return (
     <>
       <div className="h-screen flex flex-col">
         <Header />
+        <Toaster position="top-center" />
         <main className="flex flex-col md:flex-row flex-1 overflow-hidden bg-gray-100">
           {/* Sidebar */}
           <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />

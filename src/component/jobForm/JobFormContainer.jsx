@@ -92,27 +92,21 @@ const JobFormContainer = ({
         </div>
 
         <div className="md:col-span-2 flex justify-end gap-4 pt-4">
-          {/* <Button
-            type="button"
-            onClickFunction={onSubmitHandler}
-            Content="Add Job"
-            className="bg-blue-600 text-white px-5 py-2.5 rounded-lg font-medium hover:bg-blue-700 transition"
-          />
-          <Button
-            type="button"
-            onClickFunction={resetForm}
-            Content="Reset Form"
-            className="bg-yellow-500 text-white px-5 py-2.5 rounded-lg font-medium hover:bg-yellow-700 transition"
-          /> */}
           <Button
             type="button"
             onClickFunction={onSubmitHandler}
+            disabled={
+              !jobTrackForm?.companyName?.trim() ||
+              !jobTrackForm?.jobRole?.trim() ||
+              !jobTrackForm?.jobLocation?.trim() ||
+              !jobTrackForm?.jobType?.trim()
+            }
             Content={editingId ? "Save Changes" : "Add Job"}
             className={`text-white px-5 py-2.5 rounded-lg font-medium transition ${
               editingId
                 ? "bg-yellow-500 hover:bg-yellow-600"
                 : "bg-blue-600 hover:bg-blue-700"
-            }`}
+            } disabled:opacity-50 disabled:cursor-not-allowed`}
           />
 
           <Button
