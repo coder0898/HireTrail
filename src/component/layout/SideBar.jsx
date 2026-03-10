@@ -1,7 +1,11 @@
 import { BriefcaseIcon } from "@heroicons/react/16/solid";
 import { ClipboardDocumentListIcon } from "@heroicons/react/20/solid";
 import ListItem from "../sidebar/ListItem";
-const Sidebar = ({ activeTab, setActiveTab }) => {
+import { useContext } from "react";
+import { JobContext } from "../../context/JobContext";
+const Sidebar = () => {
+  const { state, dispatch } = useContext(JobContext);
+  const { activeTab } = state;
   return (
     <>
       <aside className="bg-white w-full md:w-64 shrink-0 ">
@@ -11,14 +15,14 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
             label="Job Applications"
             tabName="list"
             activeTab={activeTab}
-            setActiveTab={setActiveTab}
+            dispatch={dispatch}
           />
           <ListItem
             icon={ClipboardDocumentListIcon}
             label="Tracking Form"
             tabName="form"
             activeTab={activeTab}
-            setActiveTab={setActiveTab}
+            dispatch={dispatch}
           />
         </ul>
       </aside>

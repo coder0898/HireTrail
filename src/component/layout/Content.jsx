@@ -1,25 +1,78 @@
 import { BriefcaseIcon } from "@heroicons/react/16/solid";
 import { ClipboardDocumentListIcon } from "@heroicons/react/20/solid";
 import JobFormContainer from "../jobForm/JobFormContainer";
-import { useEffect } from "react";
+import { useContext } from "react";
 
 import TableContainer from "../table/TableContainer";
-const Content = ({
-  activeTab,
-  jobTrackForm,
-  handleInputChange,
-  resetForm,
-  errors,
-  onSubmitHandler,
-  jobs,
-  handleEdit,
-  editingId,
-  handleDelete,
-}) => {
-  // Fetch jobs from localStorage
-  useEffect(() => {
-    JSON.parse(localStorage.getItem("jobTrackList"));
-  }, [jobs]);
+import { JobContext } from "../../context/JobContext";
+const Content = () => {
+  const { state, dispatch } = useContext(JobContext);
+  const { jobTrackForm, errors, activeTab, jobs, editingId } = state;
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    dispatch({ type: "UPDATE_INPUT", payload: { name, value } });
+  };
+
+  function validateForm(values) {
+    const newErrors = {};
+
+    if (!values.companyName.trim()) {
+      newErrors.companyName = "Company name is required";
+    }
+
+    if (!values.jobRole.trim()) {
+      newErrors.jobRole = "Job role is required";
+    }
+
+    if (!values.jobLocation.trim()) {
+      newErrors.jobLocation = "Location is required";
+    }
+
+    if (!values.jobType.trim()) {
+      newErrors.jobType = "Job type is required";
+    }
+
+    return newErrors;
+  }
+
+  const onSubmitHandler = (e) => {
+    e.preventDefault();
+    const validationErrors = validateForm(jobTrackForm);
+
+    if (Object.keys(validationErrors).length > 0) {
+      dispatch({ type: "SET_ERRORS", payload: validationErrors });
+      return;
+    }
+
+    if (editingId) {
+      dispatch({
+        type: "UPDATE_JOB",
+        payload: {
+          ...jobTrackForm,
+          id: editingId,
+          updatedAt: new Date().toISOString().split("T")[0],
+        },
+      });
+    } else {
+      dispatch({
+        type: "ADD_JOB",
+        payload: {
+          ...jobTrackForm,
+          id: Date.now(),
+          createdAt: new Date().toISOString().split("T")[0],
+          updatedAt: new Date().toISOString().split("T")[0],
+        },
+      });
+    }
+
+    dispatch({ type: "RESET_FORM" });
+  };
+
+  const handleEdit = (job) =>
+    dispatch({ type: "SET_EDIT", payload: job, id: job.id });
+  const handleDelete = (jobId) =>
+    dispatch({ type: "DELETE_JOB", payload: jobId });
 
   return (
     <>
@@ -39,7 +92,7 @@ const Content = ({
                 handleInputChange={handleInputChange}
                 errors={errors}
                 onSubmitHandler={onSubmitHandler}
-                resetForm={resetForm}
+                resetForm={() => dispatch({ type: "RESET_FORM" })}
                 editingId={editingId}
               />
             </>

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import "./App.css";
 import Header from "./component/layout/Header";
 import Sidebar from "./component/layout/SideBar";
@@ -6,6 +5,7 @@ import Content from "./component/layout/Content";
 import toast, { Toaster } from "react-hot-toast";
 
 function App() {
+<<<<<<< HEAD
   const [jobTrackForm, setJobTrackForm] = useState({
     companyName: "",
     jobRole: "",
@@ -112,6 +112,8 @@ function App() {
     toast.error("Job deleted! 😢");
   };
 
+=======
+>>>>>>> premaster
   return (
     <>
       <div className="h-screen flex flex-col">
@@ -119,21 +121,10 @@ function App() {
         <Toaster position="top-center" />
         <main className="flex flex-col md:flex-row flex-1 overflow-hidden bg-gray-100">
           {/* Sidebar */}
-          <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+          <Sidebar />
 
           {/* Content Section */}
-          <Content
-            activeTab={activeTab}
-            jobTrackForm={jobTrackForm}
-            onSubmitHandler={onSubmitHandler}
-            errors={errors}
-            handleInputChange={handleInputChange}
-            resetForm={resetForm}
-            jobs={jobs}
-            handleEdit={handleEdit}
-            editingId={editingId}
-            handleDelete={handleDelete}
-          />
+          <Content />
         </main>
       </div>
     </>

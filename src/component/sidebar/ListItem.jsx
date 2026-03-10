@@ -1,10 +1,10 @@
-const ListItem = ({ icon: Icon, label, tabName, activeTab, setActiveTab }) => {
+const ListItem = ({ icon: Icon, label, tabName, activeTab, dispatch }) => {
   const isActive = activeTab === tabName;
 
   return (
     <>
       <li
-        onClick={() => setActiveTab(tabName)}
+        onClick={() => dispatch({ type: "SET_ACTIVE_TAB", payload: tabName })}
         className={`flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition
                 ${
                   isActive
