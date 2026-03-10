@@ -92,18 +92,6 @@ const JobFormContainer = ({
         </div>
 
         <div className="md:col-span-2 flex justify-end gap-4 pt-4">
-          {/* <Button
-            type="button"
-            onClickFunction={onSubmitHandler}
-            Content="Add Job"
-            className="bg-blue-600 text-white px-5 py-2.5 rounded-lg font-medium hover:bg-blue-700 transition"
-          />
-          <Button
-            type="button"
-            onClickFunction={resetForm}
-            Content="Reset Form"
-            className="bg-yellow-500 text-white px-5 py-2.5 rounded-lg font-medium hover:bg-yellow-700 transition"
-          /> */}
           <Button
             type="button"
             onClickFunction={onSubmitHandler}
