@@ -13,7 +13,7 @@ const initialState = {
     appliedDate: new Date().toISOString().split("T")[0],
   },
   errors: {},
-  activeTab: "list",
+  activeTab: "dash",
   jobs: JSON.parse(localStorage.getItem("jobTrackList")) || [],
   editingId: null,
 };
