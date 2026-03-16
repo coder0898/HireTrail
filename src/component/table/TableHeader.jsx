@@ -1,15 +1,4 @@
-const TableHeader = () => {
-  const headings = [
-    "Sr. No.",
-    "Company",
-    "Role",
-    "Location",
-    "Type",
-    "Status",
-    "Priority",
-    "Applied",
-    "Actions",
-  ];
+const TableHeader = ({ headings }) => {
   return (
     <>
       <thead className="bg-blue-500 text-white">

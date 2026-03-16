@@ -2,7 +2,7 @@ import TableHeader from "./TableHeader";
 import TableContent from "./TableContent";
 import ConfirModal from "../modal/ConfirmModal";
 import { useState } from "react";
-const TableContainer = ({ jobs, handleEdit, handleDelete }) => {
+const TableContainer = ({ jobs, handleEdit, handleDelete, headings }) => {
   const [deleteModal, setDeleteModal] = useState({
     isOpen: false,
     jobId: null,
@@ -12,8 +12,8 @@ const TableContainer = ({ jobs, handleEdit, handleDelete }) => {
   const closeDeleteModal = () => setDeleteModal({ isOpen: false, jobId: null });
   return (
     <>
-      <table className="min-w-full bg-white shadow border-r border-l rounded-lg overflow-hidden">
-        <TableHeader />
+      <table className="min-w-full bg-white shadow border-r border-l rounded-lg overflow-y-auto">
+        <TableHeader headings={headings} />
         <TableContent
           jobs={jobs}
           handleEdit={handleEdit}

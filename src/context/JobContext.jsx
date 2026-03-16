@@ -1,4 +1,4 @@
-import { createContext, useReducer } from "react";
+import { createContext, useReducer, useMemo } from "react";
 
 export const JobContext = createContext();
 
@@ -18,6 +18,10 @@ const initialState = {
   editingId: null,
 };
 
+const saveJobs = (jobs) => {
+  localStorage.setItem("jobTrackList", JSON.stringify(jobs));
+};
+
 function JobReducer(state, action) {
   switch (action.type) {
     case "UPDATE_INPUT":
@@ -32,22 +36,8 @@ function JobReducer(state, action) {
           [action.payload.name]: "",
         },
       };
-      break;
 
     case "SET_ERRORS":
-      return {
-        ...state,
-        jobTrackForm: {
-          ...state.jobTrackForm,
-          [action.payload.name]: action.payload.value,
-        },
-        errors: {
-          ...state.errors,
-          [action.payload.name]: "",
-        },
-      };
-      break;
-
       return {
         ...state,
         errors: action.payload,
@@ -59,34 +49,25 @@ function JobReducer(state, action) {
         activeTab: action.payload,
       };
 
-    case "ADD_JOB":
-      const newJobs = [...state.jobs, action.payload];
-      localStorage.setItem("jobTrackList", JSON.stringify(newJobs));
-      return {
-        ...state,
-        jobs: newJobs,
-      };
+    case "ADD_JOB": {
+      const jobs = [...state.jobs, action.payload];
+      saveJobs(jobs);
+      return { ...state, jobs };
+    }
 
-    case "UPDATE_JOB":
-      const updatedJobs = state.jobs.map((job) =>
+    case "UPDATE_JOB": {
+      const jobs = state.jobs.map((job) =>
         job.id === action.payload.id ? action.payload : job,
       );
-      localStorage.setItem("jobTrackList", JSON.stringify(updatedJobs));
-      return {
-        ...state,
-        jobs: updatedJobs,
-        editingId: null,
-      };
+      saveJobs(jobs);
+      return { ...state, jobs, editingId: null };
+    }
 
-    case "DELETE_JOB":
-      const filteredJobs = state.jobs.filter(
-        (job) => job.id !== action.payload,
-      );
-      localStorage.setItem("jobTrackList", JSON.stringify(filteredJobs));
-      return {
-        ...state,
-        jobs: filteredJobs,
-      };
+    case "DELETE_JOB": {
+      const jobs = state.jobs.filter((job) => job.id !== action.payload);
+      saveJobs(jobs);
+      return { ...state, jobs };
+    }
 
     case "SET_EDIT":
       return {
@@ -99,9 +80,9 @@ function JobReducer(state, action) {
     case "RESET_FORM":
       return {
         ...state,
-        jobTrackForm: initialState.jobTrackForm,
-        errors: {},
+        jobTrackForm: { ...initialState.jobTrackForm },
         editingId: null,
+        errors: {},
         activeTab: "list",
       };
 
@@ -113,8 +94,27 @@ function JobReducer(state, action) {
 export const JobProvider = ({ children }) => {
   const [state, dispatch] = useReducer(JobReducer, initialState);
 
+  const stats = useMemo(() => {
+    const applied = state.jobs.filter((j) => j.jobStatus === "Applied").length;
+    const interviews = state.jobs.filter(
+      (j) => j.jobStatus === "Interview",
+    ).length;
+    const rejected = state.jobs.filter(
+      (j) => j.jobStatus === "Rejected",
+    ).length;
+    const offers = state.jobs.filter((j) => j.jobStatus === "Offer").length;
+
+    return {
+      totalApplications: state.jobs.length,
+      applied,
+      interviews,
+      rejected,
+      offers,
+    };
+  }, [state.jobs]);
+
   return (
-    <JobContext.Provider value={{ state, dispatch }}>
+    <JobContext.Provider value={{ state, dispatch, stats }}>
       {children}
     </JobContext.Provider>
   );
