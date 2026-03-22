@@ -6,7 +6,6 @@ import FormSelect from "./FormSelect";
 const JobFormContainer = ({
   jobTrackForm,
   handleInputChange,
-  errors,
   onSubmitHandler,
   resetForm,
   editingId,
@@ -18,9 +17,9 @@ const JobFormContainer = ({
           <FormInput
             label="Company Name"
             name="companyName"
+            placeholder="Enter company name"
             value={jobTrackForm.companyName}
             onChangeFunction={handleInputChange}
-            error={errors.companyName}
             required
           />
           <FormInput
@@ -28,7 +27,6 @@ const JobFormContainer = ({
             name="jobRole"
             value={jobTrackForm.jobRole}
             onChangeFunction={handleInputChange}
-            error={errors.jobRole}
             required
           />
           <FormInput
@@ -36,7 +34,6 @@ const JobFormContainer = ({
             name="jobLocation"
             value={jobTrackForm.jobLocation}
             onChangeFunction={handleInputChange}
-            error={errors.jobLocation}
             required
           />
           <FormSelect
@@ -44,7 +41,6 @@ const JobFormContainer = ({
             name="jobType"
             value={jobTrackForm.jobType}
             onChangeFunction={handleInputChange}
-            error={errors.jobType}
             required
             optionValue={[
               "Full-time",
@@ -101,24 +97,26 @@ const JobFormContainer = ({
               !jobTrackForm?.jobLocation?.trim() ||
               !jobTrackForm?.jobType?.trim()
             }
-            Content={editingId ? "Save Changes" : "Add Job"}
             className={`text-white px-5 py-2.5 rounded-lg font-medium transition ${
               editingId
                 ? "bg-yellow-500 hover:bg-yellow-600"
                 : "bg-blue-600 hover:bg-blue-700"
             } disabled:opacity-50 disabled:cursor-not-allowed`}
-          />
+          >
+            {editingId ? "Save Changes" : "Add Job"}
+          </Button>
 
           <Button
             type="button"
             onClickFunction={resetForm}
-            Content={editingId ? "Cancel Edit" : "Reset Form"}
             className={`text-white px-5 py-2.5 rounded-lg font-medium transition ${
               editingId
                 ? "bg-red-500 hover:bg-red-600"
                 : "bg-yellow-500 hover:bg-yellow-600"
             }`}
-          />
+          >
+            {editingId ? "Cancel Edit" : "Reset Form"}
+          </Button>
         </div>
       </form>
     </>
