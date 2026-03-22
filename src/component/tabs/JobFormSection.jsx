@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 
 const JobFormSection = () => {
   const { state, dispatch } = useContext(JobContext);
-  const { jobTrackForm, errors, editingId } = state;
+  const { jobTrackForm, editingId } = state;
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -51,7 +51,6 @@ const JobFormSection = () => {
       <JobFormContainer
         jobTrackForm={jobTrackForm}
         handleInputChange={handleInputChange}
-        errors={errors}
         onSubmitHandler={onSubmitHandler}
         resetForm={() => dispatch({ type: "RESET_FORM" })}
         editingId={editingId}
