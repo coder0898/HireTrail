@@ -1,10 +1,20 @@
 import { MapIcon } from "@heroicons/react/20/solid";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FormInput from "../component/job-form/FormInput";
 import Button from "../component/job-form/Button";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const Auth = () => {
+  const { user, login, register: registerUser } = useAuth();
+  const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
+
+  useEffect(() => {
+    if (user) {
+      navigate("/home");
+    }
+  }, [user]);
 
   const [loginData, setLoginData] = useState({
     email: "",
@@ -44,14 +54,27 @@ const Auth = () => {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    console.log(loginData);
+    if (!validateLogin()) return;
+
+    const res = login(loginData);
+    navigate("/home");
+
+    if (!res.success) {
+      alert(res.message);
+    }
   };
 
   const handleRegister = (e) => {
     e.preventDefault();
-    console.log(register);
-  };
+    if (!validateRegister()) return;
 
+    const res = registerUser(register);
+    navigate("/home");
+
+    if (!res.success) {
+      alert(res.message);
+    }
+  };
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500">
       <div className="w-full max-w-5xl rounded-2xl shadow-2xl flex overflow-hidden backdrop-blur-xl bg-white/10 border border-white/20">
